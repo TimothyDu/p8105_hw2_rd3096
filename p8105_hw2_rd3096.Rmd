@@ -57,6 +57,15 @@ ada_compliant_stations=
 2. There are 468 stations are ADA compliant.
 
 *What proportion of station entrances / exits without vending allow entrance?
+```{r}
+proportion_no_vending_allows_entry=
+  nyc_subway_clean %>%
+  filter(vending == "NO") %>%
+  summarize(proportion = mean(entry))
+proportion_no_vending_allows_entry
+```
+3. 37.7% of station entrances / exits without vending allow entrance.
+
 
 
 
