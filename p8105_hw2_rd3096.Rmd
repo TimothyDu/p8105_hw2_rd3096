@@ -142,3 +142,18 @@ combined_trash_wheel=
   relocate(trash_wheel)
 ```
 
+The number of observations in the combined datafile is `r nrow(combined_trash_wheel)`.Key variables in the dataset include `dumpster`, which identifies the dumpster used, `weight_tons` for the weight of trash collected, and `cigarette_butts` for the number of cigarette butts collected.
+
+```{r}
+total_weight_professor= combined_trash_wheel %>%
+  filter(trash_wheel == "Professor. Trash Wheel") %>%
+  summarize(total_weight = sum(weight_tons, na.rm = TRUE)) %>%
+  pull(total_weight)
+
+total_cig_butts_gwynnda_june=
+  combined_trash_wheel %>%
+  filter(trash_wheel == "Gwynnda. Trash Wheel", month == "June", year == "2022") %>%
+  summarize(total_cig_butts = sum(cigarette_butts, na.rm = TRUE)) %>%
+  pull(total_cig_butts)
+```
+The total weight of trash collected by Professor Trash Wheel is 216.26, the total number of cigarette butts collected by Gwynnda in June of 2022 is 18120.
