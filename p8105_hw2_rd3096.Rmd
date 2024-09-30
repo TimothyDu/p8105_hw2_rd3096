@@ -53,7 +53,6 @@ ada_compliant_stations=
   filter(ada==TRUE) %>% 
   nrow()
 ```
-
 2. There are 468 stations are ADA compliant.
 
 *What proportion of station entrances / exits without vending allow entrance?
@@ -62,7 +61,6 @@ proportion_no_vending_allows_entry=
   nyc_subway_clean %>%
   filter(vending == "NO") %>%
   summarize(proportion = mean(entry))
-proportion_no_vending_allows_entry
 ```
 3. 37.7% of station entrances / exits without vending allow entrance.
 
@@ -98,3 +96,35 @@ ada_compliant_a_train_stations=
   nrow()
 ```
 Of the stations that serve the A train, 17 are ADA compliant
+
+#problem 2
+```{r}
+library(readxl)
+library(dplyr)
+```
+
+##read the Mr. Trash Wheel excel file and clean the data
+```{r}
+mr_trash_wheel=
+  read_excel("./trashwheel.xlsx", sheet="Mr. Trash Wheel", skip=1) %>% janitor::clean_names() %>% 
+  filter(!is.na(dumpster)) %>% 
+  mutate(sports_balls=as.integer(round(sports_balls))) %>%
+  select(dumpster:homes_powered) %>% 
+mutate(trash_wheel = "Mr. Trash Wheel")
+```
+##read the Professor Trash Wheel excel file and clean the data
+```{r}
+professor_trash_wheel=
+  read_excel("./trashwheel.xlsx", sheet="Professor Trash Wheel", skip=1) %>% janitor::clean_names() %>% 
+  filter(!is.na(dumpster)) %>% 
+  select(dumpster:homes_powered) %>% 
+mutate(trash_wheel = "Professor. Trash Wheel")
+```
+##read the Professor Trash Wheel excel file and clean the data
+```{r}
+gwynnda_trash_wheel=
+  read_excel("./trashwheel.xlsx", sheet="Gwynnda Trash Wheel", skip=1) %>% janitor::clean_names() %>% 
+  filter(!is.na(dumpster)) %>% 
+  select(dumpster:homes_powered) %>% 
+mutate(trash_wheel = "Gwynnda. Trash Wheel")
+```
