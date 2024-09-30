@@ -164,22 +164,51 @@ The total weight of trash collected by Professor Trash Wheel is 216.26, the tota
 import, clean and Tidy baker.csv
 
 ```{r}
-baker=
+baker_clean=
   read_csv("./gbb/bakers.csv",na=c("NA","",".")) %>% 
-  janitor::clean_names()
+  janitor::clean_names() %>% 
+  separate(baker_name, into=c("baker","last_name"),sep = " ", extra = "merge") %>% 
+  relocate(baker)
 
-bake=
+bake_clean=
   read_csv("./gbb/bakes.csv", na=c("N/A","","UNKNOWN","Unknown")) %>%
-  janitor::clean_names()
+  janitor::clean_names() %>% 
+  relocate(baker)
 
-result=
-  read_csv("./gbb/results.csv",na=c("NA","",".")) %>% 
-  janitor::clean_names()
+result_clean=
+  read_csv("./gbb/results.csv",na=c("NA","","."),skip=2) %>% 
+  janitor::clean_names() %>% 
+  relocate(baker)
 
-head(baker)
-head(bake)
-head(result)
+head(baker_clean)
+head(bake_clean)
+head(result_clean)
 ```
 
+check for check for completeness and correctness across datasets 
+```{r}
+# Identify bakers without corresponding bakes
+bakers_missing_bakes =
+  anti_join(baker_clean, bake_clean, by = "baker") %>% 
+  anti_join(baker_clean, result_clean, by = "baker")
+head(bakers_missing_bakes)
+```
+there are 0 no-corresponding values
 
+Merge the datasets to create a single final dataset
+```{r}
+baker_bake=
+  left_join(baker_clean, bake_clean,by="baker")
+
+bake_combine=
+  left_join(baker_bake,result_clean,by="baker") %>% 
+  arrange(baker) %>% 
+  relocate(baker,last_name)
+
+```
+
+exporting the final combine dataset
+```{r}
+write_csv(bake_combine,"./gbb/bake_combines.csv")
+```
 
