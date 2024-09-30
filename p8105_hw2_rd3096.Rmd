@@ -66,6 +66,17 @@ proportion_no_vending_allows_entry
 ```
 3. 37.7% of station entrances / exits without vending allow entrance.
 
+##reformat the data to make route number and rount names distinct variables
+```{r}
+nyc_subway_routes_clean= 
+  nyc_subway_clean %>%
+  mutate(across(route1:route11,as.character)) %>% 
+  pivot_longer(
+    route1:route11, 
+    names_to = "route_number", 
+    values_to = "route_name" 
+  )
+```
 
 
 
