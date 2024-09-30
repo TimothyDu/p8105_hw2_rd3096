@@ -110,6 +110,7 @@ mr_trash_wheel=
   filter(!is.na(dumpster)) %>% 
   mutate(sports_balls=as.integer(round(sports_balls))) %>%
   select(dumpster:homes_powered) %>% 
+  mutate(year = as.character(year)) %>% 
 mutate(trash_wheel = "Mr. Trash Wheel")
 ```
 ##read the Professor Trash Wheel excel file and clean the data
@@ -118,6 +119,7 @@ professor_trash_wheel=
   read_excel("./trashwheel.xlsx", sheet="Professor Trash Wheel", skip=1) %>% janitor::clean_names() %>% 
   filter(!is.na(dumpster)) %>% 
   select(dumpster:homes_powered) %>% 
+  mutate(year = as.character(year)) %>% 
 mutate(trash_wheel = "Professor. Trash Wheel")
 ```
 ##read the Professor Trash Wheel excel file and clean the data
@@ -126,5 +128,17 @@ gwynnda_trash_wheel=
   read_excel("./trashwheel.xlsx", sheet="Gwynnda Trash Wheel", skip=1) %>% janitor::clean_names() %>% 
   filter(!is.na(dumpster)) %>% 
   select(dumpster:homes_powered) %>% 
+  mutate(year = as.character(year)) %>% 
 mutate(trash_wheel = "Gwynnda. Trash Wheel")
 ```
+
+## combine the datafiles using binding
+```{r}
+combined_trash_wheel=
+  bind_rows(
+    mr_trash_wheel, 
+    professor_trash_wheel, 
+    gwynnda_trash_wheel) %>% 
+  relocate(trash_wheel)
+```
+
