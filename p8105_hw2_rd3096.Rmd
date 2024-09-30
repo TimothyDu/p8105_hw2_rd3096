@@ -199,18 +199,19 @@ there are 0 no-corresponding values
 Merge the datasets to create a single final dataset
 ```{r}
 baker_bake=
-  left_join(baker_clean, bake_clean,by="baker")
+  left_join(baker_clean, bake_clean,by=c("baker","series")) %>% 
+  arrange(episode)
+
+result_clean=result_clean %>% arrange(episode)
 
 bake_combine=
-  left_join(baker_bake,result_clean,by="baker") %>% 
-  arrange(series) %>% 
-  relocate(baker,series,episode.y)
+  left_join(baker_bake,result_clean,by=c("baker","episode","series")) 
 ```
 
 exporting datafile bake_combine
 
 ```{r}
-write_csv(bake_combine, "./gbb/bake_combined.csv")
+write_csv(bake_combine, "./gbb/bake_combine.csv")
 ```
 
 My data cleaning process:
@@ -233,4 +234,9 @@ The final dataset is a merged dataset that contains information about each baker
 Performance Results: technical_rank, result (whether the baker stayed, was eliminated, or became Star Baker).
 
 The dataset is ordered by series and episode, making it easy to track the performance for each baker across different challenges throughout the show.
+
+##create a table shows showing the star baker or winner of each episode in Seasons 5 through 10
+```{r}
+
+```
 
