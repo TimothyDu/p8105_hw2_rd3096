@@ -157,3 +157,29 @@ total_cig_butts_gwynnda_june=
   pull(total_cig_butts)
 ```
 The total weight of trash collected by Professor Trash Wheel is 216.26, the total number of cigarette butts collected by Gwynnda in June of 2022 is 18120.
+
+
+#Problem 3
+
+import, clean and Tidy baker.csv
+
+```{r}
+baker=
+  read_csv("./gbb/bakers.csv",na=c("NA","",".")) %>% 
+  janitor::clean_names()
+
+bake=
+  read_csv("./gbb/bakes.csv", na=c("N/A","","UNKNOWN","Unknown")) %>%
+  janitor::clean_names()
+
+result=
+  read_csv("./gbb/results.csv",na=c("NA","",".")) %>% 
+  janitor::clean_names()
+
+head(baker)
+head(bake)
+head(result)
+```
+
+
+
