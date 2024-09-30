@@ -7,5 +7,56 @@ output: github_document
 library(tidyverse)
 ```
 
+#problem1 
+
+##load the nyc transit data and clean names
+```{r}
+nyc_subway=
+  read_csv("./NYCSUB.csv",na=c("NA","",".")) %>% 
+  janitor::clean_names()
+```
+
+##clean the data as requested 
+```{r}
+nyc_subway_clean=nyc_subway %>% 
+  select(
+    line, station_name, station_latitude, station_longitude, route1:route11, entry, vending, entrance_type, ada) %>% 
+  mutate(
+    entry=
+      case_match(
+      entry,
+      "YES"~TRUE,
+      "NO"~ FALSE),
+      entry=as.logical(entry)
+    )
+```
+
+## a short paragraph describing the dataset
+The NYC subway dataset contains 1,868 rows and 19 columns. It includes variables such as line, which represents the subway line (e.g., "4 Avenue"), station_name for the subway station (e.g., "25th St"), geographical coordinates (station_latitude and station_longitude), and various subway routes from route1 to route11. Additionally, the dataset has information on the type of entrance (entrance_type), whether vending machines are available (vending), and whether the station is ADA compliant (ada).
+For the cleaning process, I retained only the necessary variables and transformed the entry variable, which originally contained "YES" and "NO" as character values, into a logical format (TRUE/FALSE). After cleaning, the dataset consists of 1,868 observations and retains the 19 original columns. While the data is fairly tidy, further steps may be needed to handle the route variables, which are currently spread across multiple columns.
+
+##Answer the Questions:
+*How many distinct stations are there? Note that stations are identified both by name and by line (e.g. 125th St 8th Avenue; 125st Broadway; 125st Lenox); the distinct function may be useful here.
+
+```{r}
+distinct_stations=
+  nyc_subway_clean %>% 
+  distinct(station_name,line) %>% 
+  nrow()
+```
+1. There are 465 number of distinct stations are stored in distinct_stations.
+
+*How many stations are ADA compliant?
+```{r}
+ada_compliant_stations=
+  nyc_subway_clean %>% 
+  filter(ada==TRUE) %>% 
+  nrow()
+```
+
+2. There are 468 stations are ADA compliant.
+
+*What proportion of station entrances / exits without vending allow entrance?
+
 
 
