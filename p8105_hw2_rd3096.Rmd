@@ -168,7 +168,8 @@ baker_clean=
   read_csv("./gbb/bakers.csv",na=c("NA","",".")) %>% 
   janitor::clean_names() %>% 
   separate(baker_name, into=c("baker","last_name"),sep = " ", extra = "merge") %>% 
-  relocate(baker)
+  relocate(baker) %>% 
+  arrange(baker)
 
 bake_clean=
   read_csv("./gbb/bakes.csv", na=c("N/A","","UNKNOWN","Unknown")) %>%
@@ -202,13 +203,28 @@ baker_bake=
 
 bake_combine=
   left_join(baker_bake,result_clean,by="baker") %>% 
-  arrange(baker) %>% 
-  relocate(baker,last_name)
-
+  arrange(series) %>% 
+  relocate(baker,series,episode.y)
 ```
 
-exporting the final combine dataset
+exporting datafile bake_combine
+
 ```{r}
-write_csv(bake_combine,"./gbb/bake_combines.csv")
+write_csv(bake_combine, "./gbb/bake_combined.csv")
 ```
+
+My data cleaning process:
+1. Step 1: Load and Inspect the Data
+
+2. Step 2: Handle Missing Values and Inconsistent Data
+
+3. Step 3: Identify Many-to-Many Relationships:some bakers had multiple
+entries in both the bake_clean and result_clean datasets.
+
+4. step 4: Split the Baker's Name into First and Last Name
+
+5. Step 5: Merge and export the Datasets
+
+Discussion of the final dataset bake_combined:
+
 
