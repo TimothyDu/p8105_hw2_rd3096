@@ -244,3 +244,15 @@ star_win
 ```
 In summary, Candice’s dominance in Season 7, with multiple Star Baker titles and ultimately winning the competition, stands out as predictable. Ian's inability to carry his early momentum to an overall win in Season 6 could be seen as a surprise. Meanwhile, other contestants, like Andrew and Benjamin, performed well but couldn’t match Candice’s level of baking.
 
+##import clean and tidy the viewer dataset
+```{r}
+viewer_clean=
+  read_csv("./gbb/viewers.csv",na=c("NA","",".")) %>% 
+  janitor::clean_names()
+
+head(viewer_clean,10)
+```
+The average viewership in Season 1 is `r mean(pull(viewer_clean, series_1), na.rm = TRUE)`.
+The average viewership in Season 5 is `r mean(pull(viewer_clean, series_5), na.rm = TRUE)`.
+
+
