@@ -244,7 +244,7 @@ star_win=
   bake_combine %>% 
   filter(series >= 5 & series <= 10,result %in% c("STAR BAKER","WINNER")) %>%
   select(baker,series,episode,result) %>% 
-  arrange(series) %>% 
+  arrange(series,episode) %>% 
   knitr::kable()
 star_win
 ```
