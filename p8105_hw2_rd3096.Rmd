@@ -191,11 +191,15 @@ head(result_clean)
 ```{r}
 # Identify bakers without corresponding bakes
 bakers_missing_bakes =
-  anti_join(baker_clean, bake_clean, by = "baker") %>% 
-  anti_join(baker_clean, result_clean, by = "baker")
-head(bakers_missing_bakes)
+  anti_join(baker_clean, bake_clean, by = "series", "baker")
+str(bakers_missing_bakes)
+
+bakers_missing_result=
+  anti_join(baker_clean, result_clean, by = c ("series","baker"))
+str(bakers_missing_result)
 ```
-there are 0 no-corresponding values
+there are 25 rows in the baker_clean that doesnot exist in bake_clean
+there is one record in baker_clean that deosnot exist in result_clean
 
 ## Merge the datasets to create a single final dataset
 ```{r}
@@ -240,7 +244,8 @@ star_win=
   bake_combine %>% 
   filter(series >= 5 & series <= 10,result %in% c("STAR BAKER","WINNER")) %>%
   select(baker,series,episode,result) %>% 
-  arrange(series)
+  arrange(series) %>% 
+  knitr::kable()
 star_win
 ```
 In summary, Candice’s dominance in Season 7, with multiple Star Baker titles and ultimately winning the competition, stands out as predictable. Ian's inability to carry his early momentum to an overall win in Season 6 could be seen as a surprise. Meanwhile, other contestants, like Andrew and Benjamin, performed well but couldn’t match Candice’s level of baking.
@@ -249,7 +254,7 @@ In summary, Candice’s dominance in Season 7, with multiple Star Baker titles a
 ```{r}
 viewer_clean=
   read_csv("./gbb/viewers.csv",na=c("NA","",".")) %>% 
-  janitor::clean_names()
+  janitor::clean_names() 
 
 head(viewer_clean,10)
 ```
