@@ -7,16 +7,16 @@ output: github_document
 library(tidyverse)
 ```
 
-#problem1 
+# problem1 
 
-##load the nyc transit data and clean names
+## load the nyc transit data and clean names
 ```{r}
 nyc_subway=
   read_csv("./NYCSUB.csv",na=c("NA","",".")) %>% 
   janitor::clean_names()
 ```
 
-##clean the data as requested 
+## clean the data as requested 
 ```{r}
 nyc_subway_clean=nyc_subway %>% 
   select(
@@ -35,7 +35,7 @@ nyc_subway_clean=nyc_subway %>%
 The NYC subway dataset contains 1,868 rows and 19 columns. It includes variables such as line, which represents the subway line (e.g., "4 Avenue"), station_name for the subway station (e.g., "25th St"), geographical coordinates (station_latitude and station_longitude), and various subway routes from route1 to route11. Additionally, the dataset has information on the type of entrance (entrance_type), whether vending machines are available (vending), and whether the station is ADA compliant (ada).
 For the cleaning process, I retained only the necessary variables and transformed the entry variable, which originally contained "YES" and "NO" as character values, into a logical format (TRUE/FALSE). After cleaning, the dataset consists of 1,868 observations and retains the 19 original columns. While the data is fairly tidy, further steps may be needed to handle the route variables, which are currently spread across multiple columns.
 
-##Answer the Questions:
+## Answer the Questions:
 *How many distinct stations are there? Note that stations are identified both by name and by line (e.g. 125th St 8th Avenue; 125st Broadway; 125st Lenox); the distinct function may be useful here.
 
 ```{r}
@@ -64,7 +64,7 @@ proportion_no_vending_allows_entry=
 ```
 3. 37.7% of station entrances / exits without vending allow entrance.
 
-##reformat the data to make route number and rount names distinct variables
+## reformat the data to make route number and rount names distinct variables
 ```{r}
 nyc_subway_routes_clean= 
   nyc_subway_clean %>%
@@ -76,7 +76,7 @@ nyc_subway_routes_clean=
   )
 ```
 
-##number of distinct stations serve the A train
+## number of distinct stations serve the A train
 ```{r}
 a_train_stations=
   nyc_subway_routes_clean %>%
@@ -86,7 +86,7 @@ a_train_stations=
 ```
 There are 60 disctinct stations serve the A train.
 
-##number of distinct stations serve the A train that are complaint train
+## number of distinct stations serve the A train that are complaint train
 ```{r}
 # Find ADA-compliant stations that serve the A train
 ada_compliant_a_train_stations=
@@ -97,23 +97,23 @@ ada_compliant_a_train_stations=
 ```
 Of the stations that serve the A train, 17 are ADA compliant
 
-#problem 2
+# problem 2
 ```{r}
 library(readxl)
 library(dplyr)
 ```
 
-##read the Mr. Trash Wheel excel file and clean the data
+## read the Mr. Trash Wheel excel file and clean the data
 ```{r}
 mr_trash_wheel=
-  read_excel("./trashwheel.xlsx", sheet="Mr. Trash Wheel", skip=1) %>% janitor::clean_names() %>% 
+  read_excel("./TrashWheel.xlsx", sheet="Mr. Trash Wheel", skip=1) %>% janitor::clean_names() %>% 
   filter(!is.na(dumpster)) %>% 
   mutate(sports_balls=as.integer(round(sports_balls))) %>%
   select(dumpster:homes_powered) %>% 
   mutate(year = as.character(year)) %>% 
 mutate(trash_wheel = "Mr. Trash Wheel")
 ```
-##read the Professor Trash Wheel excel file and clean the data
+## read the Professor Trash Wheel excel file and clean the data
 ```{r}
 professor_trash_wheel=
   read_excel("./trashwheel.xlsx", sheet="Professor Trash Wheel", skip=1) %>% janitor::clean_names() %>% 
@@ -122,7 +122,7 @@ professor_trash_wheel=
   mutate(year = as.character(year)) %>% 
 mutate(trash_wheel = "Professor. Trash Wheel")
 ```
-##read the Professor Trash Wheel excel file and clean the data
+## read the Professor Trash Wheel excel file and clean the data
 ```{r}
 gwynnda_trash_wheel=
   read_excel("./trashwheel.xlsx", sheet="Gwynnda Trash Wheel", skip=1) %>% janitor::clean_names() %>% 
@@ -147,21 +147,22 @@ The number of observations in the combined datafile is `r nrow(combined_trash_wh
 ```{r}
 total_weight_professor= combined_trash_wheel %>%
   filter(trash_wheel == "Professor. Trash Wheel") %>%
-  summarize(total_weight = sum(weight_tons, na.rm = TRUE)) %>%
-  pull(total_weight)
+  summarize(total_weight = sum(weight_tons, na.rm = TRUE)) %>% 
+pull(total_weight)
+
 
 total_cig_butts_gwynnda_june=
   combined_trash_wheel %>%
   filter(trash_wheel == "Gwynnda. Trash Wheel", month == "June", year == "2022") %>%
-  summarize(total_cig_butts = sum(cigarette_butts, na.rm = TRUE)) %>%
+  summarize(total_cig_butts = sum(cigarette_butts, na.rm = TRUE)) %>% 
   pull(total_cig_butts)
 ```
-The total weight of trash collected by Professor Trash Wheel is 216.26, the total number of cigarette butts collected by Gwynnda in June of 2022 is 18120.
+The total weight of trash collected by Professor Trash Wheel is `r total_weight_professor`, the total number of cigarette butts collected by Gwynnda in June of 2022 is `r total_cig_butts_gwynnda_june`.
 
 
-#Problem 3
+# Problem 3
 
-import, clean and Tidy baker.csv
+## import, clean and Tidy three datafiles, bakers, bakes and results.
 
 ```{r}
 baker_clean=
@@ -186,7 +187,7 @@ head(bake_clean)
 head(result_clean)
 ```
 
-check for check for completeness and correctness across datasets 
+## check for check for completeness and correctness across datasets 
 ```{r}
 # Identify bakers without corresponding bakes
 bakers_missing_bakes =
@@ -196,7 +197,7 @@ head(bakers_missing_bakes)
 ```
 there are 0 no-corresponding values
 
-Merge the datasets to create a single final dataset
+## Merge the datasets to create a single final dataset
 ```{r}
 baker_bake=
   left_join(baker_clean, bake_clean,by=c("baker","series")) 
@@ -207,13 +208,13 @@ bake_combine=
   relocate(baker,series,episode)
 ```
 
-exporting datafile bake_combine
+## exporting datafile bake_combine
 
 ```{r}
 write_csv(bake_combine, "./gbb/bake_combine.csv")
 ```
 
-My data cleaning process:
+## My data cleaning process:
 
 1. Step 1: Load and Inspect the Data
 
@@ -233,7 +234,7 @@ Performance Results: technical_rank, result (whether the baker stayed, was elimi
 
 The dataset is ordered by series and episode, making it easy to track the performance for each baker across different challenges throughout the show.
 
-##create a table shows showing the star baker or winner of each episode in Seasons 5 through 10
+## create a table shows showing the star baker or winner of each episode in Seasons 5 through 10
 ```{r}
 star_win=
   bake_combine %>% 
@@ -244,7 +245,7 @@ star_win
 ```
 In summary, Candice’s dominance in Season 7, with multiple Star Baker titles and ultimately winning the competition, stands out as predictable. Ian's inability to carry his early momentum to an overall win in Season 6 could be seen as a surprise. Meanwhile, other contestants, like Andrew and Benjamin, performed well but couldn’t match Candice’s level of baking.
 
-##import clean and tidy the viewer dataset
+## import clean and tidy the viewer dataset
 ```{r}
 viewer_clean=
   read_csv("./gbb/viewers.csv",na=c("NA","",".")) %>% 
