@@ -204,10 +204,10 @@ there is one record in baker_clean that deosnot exist in result_clean
 ## Merge the datasets to create a single final dataset
 ```{r}
 baker_bake=
-  left_join(baker_clean, bake_clean,by=c("baker","series")) 
+  left_join(baker_clean, bake_clean,by=c("baker","series"))
 
 bake_combine=
-  left_join(baker_bake,result_clean,by=c("baker","episode","series")) %>% 
+  left_join(result_clean,baker_bake, by=c("baker","episode","series")) %>% 
   janitor::clean_names() %>% 
   relocate(baker,series,episode)
 ```
@@ -245,6 +245,7 @@ star_win=
   filter(series >= 5 & series <= 10,result %in% c("STAR BAKER","WINNER")) %>%
   select(baker,series,episode,result) %>% 
   arrange(series,episode) %>% 
+  relocate(series,episode,result,baker) %>% 
   knitr::kable()
 star_win
 ```
